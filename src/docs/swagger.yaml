@@ -1,0 +1,246 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: API Money ERP
+
+schemes:
+  # tip: remove http to make production-grade
+  - https
+  - http
+tags:
+  - name: Transactions
+    description: Consult user's payment
+  - name: Payments
+    description: Create a payment
+    
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  # Tansaction ROUTE
+  /api/transactions/{user_id}:
+    x-swagger-router-controller: Transactions
+    get:
+      tags:
+        - Transactions
+      description: Returns user's transactions for a given user_id
+      # used as the method name of the controller
+      operationId: get_transactions_all
+      parameters:
+        - name: user_id
+          in: path
+          description: The user_id of the user
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Transactions"
+        # responses may fall through to errors
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+            
+  # Payment ROUTE
+  /api/payment:
+    x-swagger-router-controller: Payments
+    post:
+      tags:
+        - Payments
+      description: Create a payment
+      # used as the method name of the controller
+      operationId: post_payment_transaction
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Payment"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/PaymentResponse"
+        # responses may fall through to errors
+        "400":
+          description: Error
+          schema:
+            $ref: "#/definitions/PaymentErrorResponse"
+  
+  
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  Transactions:
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        description: List of user's transactions
+        items:
+          $ref: '#/definitions/Transaction'
+          
+  Payment:
+    required:
+      - user_id
+      - products
+      - payment
+    properties:
+      user_id:
+        type: integer
+        description: User id
+      products:
+        type: array
+        description: Products purchased
+        items:
+          $ref: '#/definitions/PaymentProduct'
+      payment:
+        $ref: '#/definitions/TypePayment'
+          
+          
+  Transaction:
+    required:
+      - _id
+      - user_id
+      - price
+      - payment_type
+      - date
+      - products
+    properties:
+      _id:
+        type: integer
+        description: Transaction ID
+      user_id:
+        type: integer
+        description: User ID
+      price:
+        type: number
+        description: Total price of transaction
+      payment_type:
+        type: string
+        description: Type of payment (Card, cash, MembershipCard)
+      date:
+        type: string
+        format: date-time
+        description: Transaction date
+      products:
+        type: array
+        items: 
+          $ref: '#/definitions/Product'
+        description: List of products purchased in this transaction
+  
+  Product:
+    required:
+      - id
+      - name
+      - unit_price
+      - quantity
+    properties:
+      id:
+        type: integer
+        description: Product ID
+      name:
+        type: string
+        description: Product name
+      unit_price:
+        type: integer
+        description: Unit price of the product
+      quantity:
+        type: integer
+        description: Quantity of products purchased
+        
+  PaymentProduct:
+    required:
+      - id
+      - quantity
+    properties:
+      id:
+        type: integer
+        description: Product ID
+      quantity:
+        type: integer
+        description: Quantity of products purchased   
+        
+  TypePayment:
+    required:
+      - type
+      - token
+    properties:
+      type:
+        type: string
+        description: Type of payment (card, cash, member)
+      token:
+        type: string
+        description: Card token (only necessary if it is a card payment)  
+
+  PaymentResponse:
+    required:
+      - data
+    properties:
+      data:
+        $ref: '#/definitions/PaymentResponseItem'
+          
+  PaymentResponseItem:
+    required:
+        - products
+    properties:
+      products:
+        type: array
+        description: Transaction just done
+        items:
+          $ref: '#/definitions/Transaction'
+  
+  ApiResponse:
+    required:
+      - success
+    properties:
+      success:
+        type: boolean
+        description: True if the api operation succeeded. False otherwise
+  
+  ErrorResponse:
+    required:
+      - status
+      - success
+      - data
+    properties:
+      status:
+        type: string
+      success:
+        type: boolean
+      data:
+        type: string
+  
+  PaymentErrorResponse:
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/PaymentError'
+        
+    
+        
+  PaymentError:
+    required:
+      - msg
+      - param
+      - location
+    properties:
+      msg:
+        type: string
+      param:
+        type: boolean
+      location:
+        type: string
+        
+

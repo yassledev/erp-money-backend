@@ -1,0 +1,45 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Projet backend pour le module MONEY de l'ERP d'association étudiante du CNAM.",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node ./src/app",
+    "start": "babel-node ./src/app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/cnam_erp_money/backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/cnam_erp_money/backend/issues"
+  },
+  "homepage": "https://gitlab.com/cnam_erp_money/backend#readme",
+  "dependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "chai": "^4.2.0",
+    "chalk": "^3.0.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.0",
+    "express-validator": "^6.14.0",
+    "got": "^12.0.0",
+    "helmet": "^3.22.0",
+    "lodash": "^4.17.15",
+    "moment": "^2.26.0",
+    "mongoose": "^5.9.15",
+    "morgan": "~1.9.0",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.14",
+    "swagger-ui-express": "^4.2.0",
+    "yaml": "^1.10.2"
+  }
+}
